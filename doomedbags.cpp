@@ -28,7 +28,7 @@ float gete(int b, int l, float *memo, int bs){
 }
 
 int main(int argc, char **argv){
-  int B=100000L;
+  int B=10000L;
   int L=6;
   float *memo = (float*)malloc(sizeof(float)*B*L);
   memset(memo, 0, sizeof(float)*B*L);
