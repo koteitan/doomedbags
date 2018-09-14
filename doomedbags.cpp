@@ -20,7 +20,7 @@ long double gete(int b, int l, long double *memo, int bs){
       int eps=10;
       while(p3-p0>eps){
         p1=(p3-p0)/3;
-        p2=(p3-p0)/3;
+        p2=p1*2;
         p1+=p0;
         p2+=p0;
         int q1=b-p1;
@@ -35,7 +35,6 @@ long double gete(int b, int l, long double *memo, int bs){
           p0=p1;
         }
       }
-      mine=FLT_MAX;
       for(int p=p0;p<=p3;p++){
         int q=b-p;
         long double e=(long double)p*rb*(long double)gete(p,l-1,memo, bs)
@@ -45,7 +44,6 @@ long double gete(int b, int l, long double *memo, int bs){
     }
   }
   memo[bs*l+b]=mine;
-  printf("(%d,%d)=%1.10Lf\n",b,l,mine);
   return mine;
 }
 
@@ -68,7 +66,7 @@ int main(int argc, char **argv){
       gete(b,l,memo,B1+1);
     }
   }
-  printf("E(%d,%d)=%1.10Lf\n",B1,L1,gete(B1,L1,memo,B1+1));
+//  printf("E(%d,%d)=%1.10Lf\n",B1,L1,gete(B1,L1,memo,B1+1));
   if(memo!=NULL)free(memo);
   return EXIT_SUCCESS;
 }
