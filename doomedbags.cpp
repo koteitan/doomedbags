@@ -23,15 +23,12 @@ long double *makee(int B1, int L1){
         p2=p1*2;
         p1+=p0;
         p2+=p0;
-//        printf("  %d,%d  %d,%d,%d,%d\n",b,l,p0,p1,p2,p3);
         int q1=b-p1;
         int q2=b-p2;
         long double e1=(long double)p1*rb*(long double)elist[p1+(l-1)*bs]
                       +(long double)q1*rb*(long double)elist[q1+(l  )*bs]+1.0f;
         long double e2=(long double)p2*rb*(long double)elist[p2+(l-1)*bs]
                       +(long double)q2*rb*(long double)elist[q2+(l  )*bs]+1.0f;
-//        printf("e(%d,%d)=%1.10Lf, e(%d,%d)=%1.10Lf\n",p1,l-1,elist[p1+(l-1)*bs],q1,l,elist[q1+(l  )*bs]);
-//        printf("e(%d,%d)=%1.10Lf, e(%d,%d)=%1.10Lf\n",p1,l-1,elist[p1+(l-1)*bs],q1,l,elist[q2+(l  )*bs]);
         if(e1<e2){ // e1 is smaller
           p3=p2;
         }else{ // e2 is smaller
@@ -44,11 +41,9 @@ long double *makee(int B1, int L1){
         int q=b-p;
         long double e=(long double)p*rb*(long double)elist[p+(l-1)*bs]
                      +(long double)q*rb*(long double)elist[q+(l  )*bs]+1.0f;
-//        printf("e(%d,%d)=%1.10Lf, e(%d,%d)=%1.10Lf\n",p,l-1,elist[p+(l-1)*bs],q,l,elist[q+(l  )*bs]);
         if(e<mine) mine=e;
       }//p
       elist[b+l*bs]=mine;
-//        printf("-> e(%d,%d)=%1.10Lf\n",b,l,elist[b+l*bs]);
     }//b
   }//l
   return elist;
@@ -66,11 +61,11 @@ int main(int argc, char **argv){
   long double* elist=makee(B1,L1);
   for(int b=B0;b<=B1;b++){
     for(int l=L0;l<=L1;l++){
-//      printf("E(%d,%d)=%1.10Lf\n",b,l,elist[b+l*(B1+1)]);
+      printf("E(%d,%d)=%1.10Lf\n",b,l,elist[b+l*(B1+1)]);
     }
   }
-      int b=B1;int l=L1;
-      printf("E(%d,%d)=%1.10Lf\n",b,l,elist[b+l*(B1+1)]);
+//      int b=B1;int l=L1;
+//      printf("E(%d,%d)=%1.10Lf\n",b,l,elist[b+l*(B1+1)]);
   if(elist!=NULL)free(elist);
   return EXIT_SUCCESS;
 }
