@@ -3,46 +3,49 @@
 #include <float.h>
 #include <string.h>
 
-float gete(int b, int l, float *memo, int bs){
-  if(memo[bs*(l-1)+b-1]!=0) return memo[bs*(l-1)+b-1];
-  float mine = FLT_MAX;
+long double gete(int b, int l, long double *memo, int bs){
+  if(memo[bs*l+b]>=0.0f) return memo[bs*l+b];
+  long double mine = FLT_MAX;
   if(b==1){
     mine=0;
   }else{
-    float rb=1.0f/(float)b;
+    long double rb=1.0f/(long double)b;
     if(l==2){
-      return ((float)b-1.0f)*rb*gete(b-1, 2, memo, bs)+1.0f;
-    }
-    int p0=1;
-    int p1;
-    int p2;
-    int p3=b;
-    int eps=10;
-    while(p3-p0>eps){
-      p1=(p3-p0)/3;
-      p2=(p3-p0)/3;
-      p1+=p0;
-      p2+=p0;
-      int q1=b-p1;
-      int q2=b-p2;
-      float e1=(float)p1*rb*(float)gete(p1,l-1,memo, bs)
-              +(float)q1*rb*(float)gete(q1,l  ,memo, bs)+1.0f;
-      float e2=(float)p2*rb*(float)gete(p2,l-1,memo, bs)
-              +(float)q2*rb*(float)gete(q2,l  ,memo, bs)+1.0f;
-      if(e1<e2){ // e1 is smaller
-        p3=p2;
-      }else{ // e2 is smaller
-        p0=p1;
+      mine=((long double)b-1.0f)*rb*gete(b-1, 2, memo, bs)+1.0f;
+    }else{
+      int p0=1;
+      int p1;
+      int p2;
+      int p3=b;
+      int eps=10;
+      while(p3-p0>eps){
+        p1=(p3-p0)/3;
+        p2=(p3-p0)/3;
+        p1+=p0;
+        p2+=p0;
+        int q1=b-p1;
+        int q2=b-p2;
+        long double e1=(long double)p1*rb*(long double)gete(p1,l-1,memo, bs)
+                      +(long double)q1*rb*(long double)gete(q1,l  ,memo, bs)+1.0f;
+        long double e2=(long double)p2*rb*(long double)gete(p2,l-1,memo, bs)
+                      +(long double)q2*rb*(long double)gete(q2,l  ,memo, bs)+1.0f;
+        if(e1<e2){ // e1 is smaller
+          p3=p2;
+        }else{ // e2 is smaller
+          p0=p1;
+        }
+      }
+      mine=FLT_MAX;
+      for(int p=p0;p<=p3;p++){
+        int q=b-p;
+        long double e=(long double)p*rb*(long double)gete(p,l-1,memo, bs)
+                     +(long double)q*rb*(long double)gete(q,l  ,memo, bs)+1.0f;
+        if(e<mine) mine=e;
       }
     }
-    for(int p=p0;p<p3;p++){
-      int q=b-p;
-      float e=(float)p*rb*(float)gete(p,l-1,memo, bs)
-             +(float)q*rb*(float)gete(q,l  ,memo, bs)+1.0f;
-      if(e<mine) mine=e;
-    }
   }
-  memo[bs*(l-1)+b-1]=mine;
+  memo[bs*l+b]=mine;
+  printf("(%d,%d)=%1.10Lf\n",b,l,mine);
   return mine;
 }
 
@@ -55,13 +58,17 @@ int main(int argc, char **argv){
     B1=atoi(argv[3]);
     L1=atoi(argv[4]);
   }
-  float *memo = (float*)malloc(sizeof(float)*B1*L1);
-  memset(memo, 0, sizeof(float)*B1*L1);
+  long double *memo = (long double*)malloc(sizeof(long double)*(B1+1)*(L1+1));
+  for(int i=0;i<(B1+1)*(L1+1);i++){
+    memo[i]=-1.0f;
+  }
   for(int b=B0;b<=B1;b++){
     for(int l=L0;l<=L1;l++){
-      printf("E(%d,%d)=%1.10f\n",b,l,gete(b,l,memo,B1));
+      printf("E(%d,%d)=%1.10Lf\n",b,l,gete(b,l,memo,B1+1));
+      gete(b,l,memo,B1+1);
     }
   }
+  printf("E(%d,%d)=%1.10Lf\n",B1,L1,gete(B1,L1,memo,B1+1));
   if(memo!=NULL)free(memo);
   return EXIT_SUCCESS;
 }
