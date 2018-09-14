@@ -9,10 +9,10 @@ float gete(int b, int l, float *memo, int bs){
   if(b==1){
     mine=0;
   }else{
-    if(l==2){
-      return ((float)b-1.0f)/(float)b*gete(b-1, 2, memo, bs)+1.0f;
-    }
     float rb=1.0f/(float)b;
+    if(l==2){
+      return ((float)b-1.0f)*rb*gete(b-1, 2, memo, bs)+1.0f;
+    }
     int p0=1;
     int p1;
     int p2;
@@ -47,16 +47,22 @@ float gete(int b, int l, float *memo, int bs){
 }
 
 int main(int argc, char **argv){
-  int B=atoi(argv[1]);
-  int L=atoi(argv[2]);
-  float *memo = (float*)malloc(sizeof(float)*B*L);
-  memset(memo, 0, sizeof(float)*B*L);
-  for(int b=1;b<=B;b++){
-    for(int l=2;l<=L;l++){
-      printf("E(%d,%d)=%1.10f\n",b,l,gete(b,l,memo,B));
+  int B0=atoi(argv[1]);
+  int L0=atoi(argv[2]);
+  int B1=B0;
+  int L1=L0;
+  if(argc==5){
+    B1=atoi(argv[3]);
+    L1=atoi(argv[4]);
+  }
+  float *memo = (float*)malloc(sizeof(float)*B1*L1);
+  memset(memo, 0, sizeof(float)*B1*L1);
+  for(int b=B0;b<=B1;b++){
+    for(int l=L0;l<=L1;l++){
+      printf("E(%d,%d)=%1.10f\n",b,l,gete(b,l,memo,B1));
     }
   }
-  if(memo)free(memo);
+  if(memo!=NULL)free(memo);
   return EXIT_SUCCESS;
 }
 
